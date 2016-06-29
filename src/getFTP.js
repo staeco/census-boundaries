@@ -1,11 +1,13 @@
 import FTPClient from 'ftp'
 import once from 'once'
+import _debug from 'debug'
+const debug = _debug('census')
 
 const makeConnection = (opt, cb) => {
   cb = once(cb)
   const client = new FTPClient()
   const retry = setTimeout(() => {
-    console.log('Trying FTP again...')
+    debug('Trying FTP again...')
     client.end()
     makeConnection(opt, cb)
   }, 2000)

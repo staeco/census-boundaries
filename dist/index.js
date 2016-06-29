@@ -32,10 +32,6 @@ var _once = require('once');
 
 var _once2 = _interopRequireDefault(_once);
 
-var _debug2 = require('debug');
-
-var _debug3 = _interopRequireDefault(_debug2);
-
 var _defaultConfig = require('./defaultConfig');
 
 var _defaultConfig2 = _interopRequireDefault(_defaultConfig);
@@ -43,6 +39,10 @@ var _defaultConfig2 = _interopRequireDefault(_defaultConfig);
 var _getFTP = require('./getFTP');
 
 var _getFTP2 = _interopRequireDefault(_getFTP);
+
+var _debug2 = require('debug');
+
+var _debug3 = _interopRequireDefault(_debug2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

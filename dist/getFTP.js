@@ -10,13 +10,19 @@ var _once = require('once');
 
 var _once2 = _interopRequireDefault(_once);
 
+var _debug2 = require('debug');
+
+var _debug3 = _interopRequireDefault(_debug2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var debug = (0, _debug3.default)('census');
 
 var makeConnection = function makeConnection(opt, cb) {
   cb = (0, _once2.default)(cb);
   var client = new _ftp2.default();
   var retry = setTimeout(function () {
-    console.log('Trying FTP again...');
+    debug('Trying FTP again...');
     client.end();
     makeConnection(opt, cb);
   }, 2000);

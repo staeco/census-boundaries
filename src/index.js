@@ -8,9 +8,9 @@ import toJSON from 'shp2json'
 import plural from 'plural'
 import defaultsDeep from 'lodash.defaultsdeep'
 import once from 'once'
-import _debug from 'debug'
 import config from './defaultConfig'
 import getFTP from './getFTP'
+import _debug from 'debug'
 const debug = _debug('census')
 
 export default (overrides, { onBoundary, onFinish }) => {
