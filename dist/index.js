@@ -52,6 +52,7 @@ exports.default = function (overrides, _ref) {
   var onBoundary = _ref.onBoundary;
   var onFinish = _ref.onFinish;
 
+
   if (!onBoundary) throw new Error('Missing onBoundary!');
   if (!onFinish) throw new Error('Missing onFinish!');
   onFinish = (0, _once2.default)(onFinish);
@@ -60,7 +61,7 @@ exports.default = function (overrides, _ref) {
   debug(_chalk2.default.bold('Establishing connection:'));
   debug('  -- ' + _chalk2.default.cyan('US Census Bureau @ ' + options.ftp.host));
 
-  (0, _getFTP2.default)(options, function (err, ftp) {
+  (0, _getFTP2.default)(options.ftp, function (err, ftp) {
     if (err) return onFinish(err);
     var context = {
       ftp: ftp,

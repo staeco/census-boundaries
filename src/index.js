@@ -14,6 +14,7 @@ import _debug from 'debug'
 const debug = _debug('census')
 
 export default (overrides, { onBoundary, onFinish }) => {
+
   if (!onBoundary) throw new Error('Missing onBoundary!')
   if (!onFinish) throw new Error('Missing onFinish!')
   onFinish = once(onFinish)
@@ -22,7 +23,7 @@ export default (overrides, { onBoundary, onFinish }) => {
   debug(chalk.bold('Establishing connection:'))
   debug(`  -- ${chalk.cyan(`US Census Bureau @ ${options.ftp.host}`)}`)
 
-  getFTP(options, (err, ftp) => {
+  getFTP(options.ftp, (err, ftp) => {
     if (err) return onFinish(err)
     const context = {
       ftp,
