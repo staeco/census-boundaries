@@ -31,7 +31,7 @@ export default (overrides, { onBoundary, onFinish }) => {
       onBoundary
     }
 
-    async.forEachSeries(options.objects, processObject.bind(null, context), onFinish)
+    async.forEachSeries(options.objects, async.ensureAsync(processObject.bind(null, context)), onFinish)
   })
 }
 
@@ -40,7 +40,7 @@ function processObject(context, object, cb) {
   fetchObjectFiles(context, object, (err, filePaths) => {
     if (err) return cb(err)
     debug(chalk.bold(`Processing ${filePaths.length} boundary ${plural('file', filePaths.length)} for ${object}`))
-    async.forEachSeries(filePaths, processFilePath.bind(null, context), cb)
+    async.forEachSeries(filePaths, async.ensureAsync(processFilePath.bind(null, context)), cb)
   })
 }
 
@@ -61,7 +61,7 @@ function processFilePath(context, file, cb) {
     srcStream.once('end', () => {
       const docs = JSON.parse(Buffer.concat(chunks)).features
       debug(`  -- ${chalk.cyan(`Parsed ${file.path}, inserting ${docs.length} boundaries now...`)}`)
-      async.forEachSeries(docs, context.onBoundary.bind(null, file.type), cb)
+      async.forEach(docs, async.ensureAsync(context.onBoundary.bind(null, file.type)), cb)
     })
 
     stream.resume()

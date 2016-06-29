@@ -69,7 +69,7 @@ exports.default = function (overrides, _ref) {
       onBoundary: onBoundary
     };
 
-    _async2.default.forEachSeries(options.objects, processObject.bind(null, context), onFinish);
+    _async2.default.forEachSeries(options.objects, _async2.default.ensureAsync(processObject.bind(null, context)), onFinish);
   });
 };
 
@@ -78,7 +78,7 @@ function processObject(context, object, cb) {
   fetchObjectFiles(context, object, function (err, filePaths) {
     if (err) return cb(err);
     debug(_chalk2.default.bold('Processing ' + filePaths.length + ' boundary ' + (0, _plural2.default)('file', filePaths.length) + ' for ' + object));
-    _async2.default.forEachSeries(filePaths, processFilePath.bind(null, context), cb);
+    _async2.default.forEachSeries(filePaths, _async2.default.ensureAsync(processFilePath.bind(null, context)), cb);
   });
 }
 
@@ -102,7 +102,7 @@ function processFilePath(context, file, cb) {
     srcStream.once('end', function () {
       var docs = JSON.parse(_buffer.Buffer.concat(chunks)).features;
       debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ', inserting ' + docs.length + ' boundaries now...'));
-      _async2.default.forEachSeries(docs, context.onBoundary.bind(null, file.type), cb);
+      _async2.default.forEach(docs, _async2.default.ensureAsync(context.onBoundary.bind(null, file.type)), cb);
     });
 
     stream.resume();
