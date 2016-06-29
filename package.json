@@ -1,0 +1,91 @@
+{
+  "name": "census-boundaries",
+  "version": "1.0.0",
+  "description": "Downloads and converts US Census TIGER data representing all boundaries in the United States",
+  "main": "dist/index.js",
+  "keywords": [
+    "census",
+    "geojson",
+    "convert",
+    "index",
+    "civic",
+    "civil"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contra/census-boundaries.git"
+  },
+  "author": "Contra <yo@contra.io> (http://contra.io)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/contra/census-boundaries/issues"
+  },
+  "homepage": "https://github.com/contra/census-boundaries#readme",
+  "files": [
+    "src",
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "preversion": "npm run clean && npm run build && npm docs",
+    "postversion": "npm run changelog",
+    "build": "babel src --out-dir dist",
+    "clean": "rimraf dist",
+    "lint": "eslint src",
+    "changelog": "github-changes -o contra -r census-boundaries -b master -f ./CHANGELOG.md --order-semver --use-commit-body",
+    "test": "npm run-script lint"
+  },
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "babel-cli": "^6.4.0",
+    "babel-core": "^6.4.0",
+    "babel-eslint": "^4.1.6",
+    "babel-loader": "^6.2.1",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-transform-runtime": "^6.4.3",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-es2015-loose": "^7.0.0",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-register": "^6.4.3",
+    "babelify": "^7.2.0",
+    "eslint": "^1.10.3",
+    "eslint-cli": "^1.0.0",
+    "eslint-config-rackt": "^1.1.1",
+    "github-changes": "^1.0.1",
+    "rimraf": "^2.5.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ],
+    "plugins": [
+      "transform-runtime",
+      "add-module-exports"
+    ]
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": "rackt",
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "ecmaFeatures": {
+      "modules": true
+    }
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.3",
+    "babel-register": "^6.8.0",
+    "babel-runtime": "^6.3.19",
+    "chalk": "^1.1.3",
+    "debug": "^2.2.0",
+    "ftp": "^0.3.10",
+    "lodash.defaultsdeep": "^4.4.0",
+    "meow": "^3.7.0",
+    "once": "^1.3.3",
+    "plural": "^0.2.0",
+    "shp2json": "^1.2.1"
+  }
+}
