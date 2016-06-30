@@ -47,6 +47,16 @@ function processObject(context, object, cb) {
 function processFilePath(context, file, cb) {
   cb = once(cb)
   const { ftp } = context
+  const onBoundary = (doc, done) => {
+    // workaround for missing crs info
+    doc.crs = {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+    context.onBoundary(file.type, doc, done)
+  }
   ftp.get(file.path, (err, stream) => {
     if (err) return cb(err)
 
@@ -61,7 +71,7 @@ function processFilePath(context, file, cb) {
     srcStream.once('end', () => {
       const docs = JSON.parse(Buffer.concat(chunks)).features
       debug(`  -- ${chalk.cyan(`Parsed ${file.path}, inserting ${docs.length} boundaries now...`)}`)
-      async.forEach(docs, async.ensureAsync(context.onBoundary.bind(null, file.type)), cb)
+      async.forEach(docs, async.ensureAsync(onBoundary), cb)
     })
 
     stream.resume()
