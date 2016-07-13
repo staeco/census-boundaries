@@ -86,16 +86,6 @@ function processFilePath(context, file, cb) {
   cb = (0, _once2.default)(cb);
   var ftp = context.ftp;
 
-  var onBoundary = function onBoundary(doc, done) {
-    // workaround for missing crs info
-    doc.crs = {
-      type: 'name',
-      properties: {
-        name: 'EPSG:4326'
-      }
-    };
-    context.onBoundary(file.type, doc, done);
-  };
   ftp.get(file.path, function (err, stream) {
     if (err) return cb(err);
 
@@ -112,7 +102,7 @@ function processFilePath(context, file, cb) {
     srcStream.once('end', function () {
       var docs = JSON.parse(_buffer.Buffer.concat(chunks)).features;
       debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ', inserting ' + docs.length + ' boundaries now...'));
-      _async2.default.forEach(docs, _async2.default.ensureAsync(onBoundary), cb);
+      _async2.default.forEach(docs, _async2.default.ensureAsync(context.onBoundary.bind(null, file.type)), cb);
     });
 
     stream.resume();
