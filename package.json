@@ -1,6 +1,6 @@
 {
   "name": "census-boundaries",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Downloads and converts US Census TIGER data representing all boundaries in the United States",
   "main": "dist/index.js",
   "keywords": [

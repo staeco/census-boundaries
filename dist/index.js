@@ -83,7 +83,7 @@ function processObject(context, object, cb) {
   fetchObjectFiles(context, object, function (err, filePaths) {
     if (err) return cb(err);
     debug(_chalk2.default.bold('Processing ' + filePaths.length + ' boundary ' + (0, _plural2.default)('file', filePaths.length) + ' for ' + object));
-    _async2.default.forEach(filePaths, _async2.default.ensureAsync(processFilePath.bind(null, context)), cb);
+    _async2.default.forEachSeries(filePaths, _async2.default.ensureAsync(processFilePath.bind(null, context)), cb);
   });
 }
 
