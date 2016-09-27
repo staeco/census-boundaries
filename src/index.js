@@ -1,5 +1,3 @@
-/*eslint no-console: 0 */
-
 import async from 'async'
 import path from 'path'
 import chalk from 'chalk'

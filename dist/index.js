@@ -52,8 +52,6 @@ var _debug3 = _interopRequireDefault(_debug2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/*eslint no-console: 0 */
-
 var debug = (0, _debug3.default)('census');
 
 exports.default = function (overrides, _ref) {
