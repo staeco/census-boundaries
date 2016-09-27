@@ -56,7 +56,7 @@ function processFilePath(context, file, cb) {
         context.onBoundary(file.type, feat, done)
       }))
       .once('error', (err) => cb(err))
-      .once('end', () => {
+      .once('finish', () => {
         debug(`  -- ${chalk.cyan(`Parsed ${file.path} and inserted ${count} boundaries`)}`)
         cb()
       })

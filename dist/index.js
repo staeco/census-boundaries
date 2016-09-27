@@ -100,7 +100,7 @@ function processFilePath(context, file, cb) {
       context.onBoundary(file.type, feat, done);
     })).once('error', function (err) {
       return cb(err);
-    }).once('end', function () {
+    }).once('finish', function () {
       debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ' and inserted ' + count + ' boundaries'));
       cb();
     });
