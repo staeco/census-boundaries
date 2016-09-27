@@ -1,10 +1,11 @@
 /*eslint no-console: 0 */
 
 import async from 'async'
-import { Buffer } from 'buffer'
 import path from 'path'
 import chalk from 'chalk'
 import toJSON from 'shp2json'
+import JSONStream from 'JSONStream'
+import map from 'through2-asyncmap'
 import plural from 'plural'
 import defaultsDeep from 'lodash.defaultsdeep'
 import once from 'once'
@@ -14,7 +15,6 @@ import _debug from 'debug'
 const debug = _debug('census')
 
 export default (overrides, { onBoundary, onFinish }) => {
-
   if (!onBoundary) throw new Error('Missing onBoundary!')
   if (!onFinish) throw new Error('Missing onFinish!')
   onFinish = once(onFinish)
@@ -47,24 +47,23 @@ function processObject(context, object, cb) {
 function processFilePath(context, file, cb) {
   cb = once(cb)
   const { ftp } = context
-  ftp.get(file.path, (err, stream) => {
+  ftp.get(file.path, (err, srcStream) => {
     if (err) return cb(err)
 
-    const srcStream = toJSON(stream)
-    const chunks = []
+    let count = 0
+    toJSON(srcStream)
+      .pipe(JSONStream.parse('features.*'))
+      .pipe(map.obj((feat, done) => {
+        ++count
+        context.onBoundary(file.type, feat, done)
+      }))
+      .once('error', (err) => cb(err))
+      .once('end', () => {
+        debug(`  -- ${chalk.cyan(`Parsed ${file.path} and inserted ${count} boundaries`)}`)
+        cb()
+      })
 
-    srcStream.on('data', (data) => {
-      chunks.push(data)
-    })
-
-    srcStream.once('error', (err) => cb(err))
-    srcStream.once('end', () => {
-      const docs = JSON.parse(Buffer.concat(chunks)).features
-      debug(`  -- ${chalk.cyan(`Parsed ${file.path}, inserting ${docs.length} boundaries now...`)}`)
-      async.forEach(docs, async.ensureAsync(context.onBoundary.bind(null, file.type)), cb)
-    })
-
-    stream.resume()
+    srcStream.resume()
   })
 }
 

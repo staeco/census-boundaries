@@ -6,8 +6,6 @@ var _async = require('async');
 
 var _async2 = _interopRequireDefault(_async);
 
-var _buffer = require('buffer');
-
 var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
@@ -19,6 +17,14 @@ var _chalk2 = _interopRequireDefault(_chalk);
 var _shp2json = require('shp2json');
 
 var _shp2json2 = _interopRequireDefault(_shp2json);
+
+var _JSONStream = require('JSONStream');
+
+var _JSONStream2 = _interopRequireDefault(_JSONStream);
+
+var _through2Asyncmap = require('through2-asyncmap');
+
+var _through2Asyncmap2 = _interopRequireDefault(_through2Asyncmap);
 
 var _plural = require('plural');
 
@@ -46,12 +52,13 @@ var _debug3 = _interopRequireDefault(_debug2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var debug = (0, _debug3.default)('census'); /*eslint no-console: 0 */
+/*eslint no-console: 0 */
+
+var debug = (0, _debug3.default)('census');
 
 exports.default = function (overrides, _ref) {
   var onBoundary = _ref.onBoundary;
   var onFinish = _ref.onFinish;
-
 
   if (!onBoundary) throw new Error('Missing onBoundary!');
   if (!onFinish) throw new Error('Missing onFinish!');
@@ -86,26 +93,21 @@ function processFilePath(context, file, cb) {
   cb = (0, _once2.default)(cb);
   var ftp = context.ftp;
 
-  ftp.get(file.path, function (err, stream) {
+  ftp.get(file.path, function (err, srcStream) {
     if (err) return cb(err);
 
-    var srcStream = (0, _shp2json2.default)(stream);
-    var chunks = [];
-
-    srcStream.on('data', function (data) {
-      chunks.push(data);
-    });
-
-    srcStream.once('error', function (err) {
+    var count = 0;
+    (0, _shp2json2.default)(srcStream).pipe(_JSONStream2.default.parse('features.*')).pipe(_through2Asyncmap2.default.obj(function (feat, done) {
+      ++count;
+      context.onBoundary(file.type, feat, done);
+    })).once('error', function (err) {
       return cb(err);
-    });
-    srcStream.once('end', function () {
-      var docs = JSON.parse(_buffer.Buffer.concat(chunks)).features;
-      debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ', inserting ' + docs.length + ' boundaries now...'));
-      _async2.default.forEach(docs, _async2.default.ensureAsync(context.onBoundary.bind(null, file.type)), cb);
+    }).once('end', function () {
+      debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ' and inserted ' + count + ' boundaries'));
+      cb();
     });
 
-    stream.resume();
+    srcStream.resume();
   });
 }
 
