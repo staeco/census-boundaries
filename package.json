@@ -27,12 +27,10 @@
     "bin"
   ],
   "scripts": {
-    "preversion": "npm run clean && npm run build && npm docs",
-    "postversion": "npm run changelog",
+    "preversion": "npm run clean && npm run build",
     "build": "babel src --out-dir dist",
     "clean": "rimraf dist",
     "lint": "eslint src",
-    "changelog": "github-changes -o contra -r census-boundaries -b master -f ./CHANGELOG.md --order-semver --use-commit-body",
     "test": "npm run-script lint"
   },
   "devDependencies": {
@@ -50,28 +48,7 @@
     "babelify": "^7.2.0",
     "eslint": "^3.6.1",
     "eslint-cli": "^1.0.0",
-    "github-changes": "^1.0.1",
     "rimraf": "^2.5.0"
-  },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0"
-    ],
-    "plugins": [
-      "transform-runtime",
-      "add-module-exports"
-    ]
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "ecmaFeatures": {
-      "modules": true
-    }
   },
   "dependencies": {
     "JSONStream": "^1.2.1",

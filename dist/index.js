@@ -1,6 +1,8 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _async = require('async');
 
@@ -55,8 +57,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var debug = (0, _debug3.default)('census');
 
 exports.default = function (overrides, _ref) {
-  var onBoundary = _ref.onBoundary;
-  var onFinish = _ref.onFinish;
+  var onBoundary = _ref.onBoundary,
+      onFinish = _ref.onFinish;
 
   if (!onBoundary) throw new Error('Missing onBoundary!');
   if (!onFinish) throw new Error('Missing onFinish!');
@@ -110,8 +112,8 @@ function processFilePath(context, file, cb) {
 }
 
 function fetchObjectFiles(_ref2, object, cb) {
-  var ftp = _ref2.ftp;
-  var options = _ref2.options;
+  var ftp = _ref2.ftp,
+      options = _ref2.options;
 
   cb = (0, _once2.default)(cb);
   var folderName = _path2.default.join(options.base, object);

@@ -1,7 +1,3 @@
-<p align='center'>
-  <img src='https://i.imgur.com/JXSMT0k.png' width='400'/>
-</p>
-
 # census-boundaries [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url]
 
 Downloads and converts US Census TIGER data representing all boundaries in the United States.
