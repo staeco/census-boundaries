@@ -40,7 +40,7 @@ var _plural = require('plural');
 
 var _plural2 = _interopRequireDefault(_plural);
 
-var _lodash = require('lodash.defaultsdeep');
+var _lodash = require('lodash.clone');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -64,14 +64,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var debug = (0, _debug3.default)('census');
 
-exports.default = function (overrides, _ref) {
-  var onBoundary = _ref.onBoundary,
+exports.default = function (_ref) {
+  var objects = _ref.objects,
+      onBoundary = _ref.onBoundary,
       onFinish = _ref.onFinish;
 
   if (!onBoundary) throw new Error('Missing onBoundary!');
   if (!onFinish) throw new Error('Missing onFinish!');
   onFinish = (0, _once2.default)(onFinish);
-  var options = (0, _lodash2.default)({}, overrides, _defaultConfig2.default);
+
+  var options = (0, _lodash2.default)(_defaultConfig2.default);
+  if (objects) options.objects = objects;
 
   debug(_chalk2.default.bold('Establishing connection:'));
   debug('  -- ' + _chalk2.default.cyan('US Census Bureau @ ' + options.ftp.host));

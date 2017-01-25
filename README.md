@@ -17,15 +17,7 @@ npm install census-boundaries
 ```js
 import census from 'census-boundaries'
 
-// specify your own options if you want
-const overrides = {
-  objects: [
-    'STATE',
-    'PLACE'
-  ]
-}
-
-census(overriders, {
+census({
   // this function is called every time a record is parsed
   onBoundary: (objectType, doc, cb) => {
     cb() // make sure to call the cb

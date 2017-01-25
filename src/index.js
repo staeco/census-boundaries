@@ -7,18 +7,20 @@ import request from 'superagent'
 import JSONStream from 'JSONStream'
 import map from 'through2-asyncmap'
 import plural from 'plural'
-import defaultsDeep from 'lodash.defaultsdeep'
+import clone from 'lodash.clone'
 import once from 'once'
 import config from './defaultConfig'
 import getFTP from './getFTP'
 import _debug from 'debug'
 const debug = _debug('census')
 
-export default (overrides, { onBoundary, onFinish }) => {
+export default ({ objects, onBoundary, onFinish }) => {
   if (!onBoundary) throw new Error('Missing onBoundary!')
   if (!onFinish) throw new Error('Missing onFinish!')
   onFinish = once(onFinish)
-  const options = defaultsDeep({}, overrides, config)
+
+  const options = clone(config)
+  if (objects) options.objects = objects
 
   debug(chalk.bold('Establishing connection:'))
   debug(`  -- ${chalk.cyan(`US Census Bureau @ ${options.ftp.host}`)}`)
