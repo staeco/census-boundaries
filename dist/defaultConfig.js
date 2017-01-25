@@ -8,7 +8,8 @@ exports.default = {
     host: 'ftp2.census.gov',
     port: 21
   },
-  base: '/geo/tiger/TIGER2015/',
-  objects: ['STATE', 'PLACE']
+  http: 'https://www2.census.gov',
+  base: '/geo/tiger/TIGER2016/',
+  objects: ['STATE', 'COUNTY', 'PLACE', 'ZCTA5']
 };
 module.exports = exports['default'];

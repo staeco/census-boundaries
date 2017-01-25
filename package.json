@@ -63,6 +63,8 @@
     "once": "^1.3.3",
     "plural": "^0.2.0",
     "shp2json": "^1.2.1",
-    "through2-asyncmap": "^1.1.0"
+    "superagent": "^3.3.2",
+    "through2-asyncmap": "^1.1.0",
+    "url-join": "^1.1.0"
   }
 }

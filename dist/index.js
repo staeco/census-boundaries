@@ -20,6 +20,14 @@ var _shp2json = require('shp2json');
 
 var _shp2json2 = _interopRequireDefault(_shp2json);
 
+var _urlJoin = require('url-join');
+
+var _urlJoin2 = _interopRequireDefault(_urlJoin);
+
+var _superagent = require('superagent');
+
+var _superagent2 = _interopRequireDefault(_superagent);
+
 var _JSONStream = require('JSONStream');
 
 var _JSONStream2 = _interopRequireDefault(_JSONStream);
@@ -91,23 +99,19 @@ function processObject(context, object, cb) {
 
 function processFilePath(context, file, cb) {
   cb = (0, _once2.default)(cb);
-  var ftp = context.ftp;
+  var ftp = context.ftp,
+      options = context.options;
 
-  ftp.get(file.path, function (err, srcStream) {
-    if (err) return cb(err);
-
-    var count = 0;
-    (0, _shp2json2.default)(srcStream).pipe(_JSONStream2.default.parse('features.*')).pipe(_through2Asyncmap2.default.obj(function (feat, done) {
-      ++count;
-      context.onBoundary(file.type, feat, done);
-    })).once('error', function (err) {
-      return cb(err);
-    }).once('finish', function () {
-      debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ' and inserted ' + count + ' boundaries'));
-      cb();
-    });
-
-    srcStream.resume();
+  var srcStream = _superagent2.default.get((0, _urlJoin2.default)(options.http, file.path)).buffer(false);
+  var count = 0;
+  (0, _shp2json2.default)(srcStream).pipe(_JSONStream2.default.parse('features.*')).pipe(_through2Asyncmap2.default.obj(function (feat, done) {
+    ++count;
+    context.onBoundary(file.type, feat, done);
+  })).once('error', function (err) {
+    return cb(err);
+  }).once('finish', function () {
+    debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ' and inserted ' + count + ' boundaries'));
+    cb();
   });
 }
 

@@ -3,9 +3,10 @@ export default {
     host: 'ftp2.census.gov',
     port: 21
   },
-  base: '/geo/tiger/TIGER2015/',
+  http: 'https://www2.census.gov',
+  base: '/geo/tiger/TIGER2016/',
   objects: [
-    'STATE',
-    'PLACE'
+    'STATE', 'COUNTY',
+    'PLACE', 'ZCTA5'
   ]
 }

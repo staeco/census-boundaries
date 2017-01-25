@@ -2,6 +2,8 @@ import async from 'async'
 import path from 'path'
 import chalk from 'chalk'
 import toJSON from 'shp2json'
+import join from 'url-join'
+import request from 'superagent'
 import JSONStream from 'JSONStream'
 import map from 'through2-asyncmap'
 import plural from 'plural'
@@ -44,25 +46,20 @@ function processObject(context, object, cb) {
 
 function processFilePath(context, file, cb) {
   cb = once(cb)
-  const { ftp } = context
-  ftp.get(file.path, (err, srcStream) => {
-    if (err) return cb(err)
-
-    let count = 0
-    toJSON(srcStream)
-      .pipe(JSONStream.parse('features.*'))
-      .pipe(map.obj((feat, done) => {
-        ++count
-        context.onBoundary(file.type, feat, done)
-      }))
-      .once('error', (err) => cb(err))
-      .once('finish', () => {
-        debug(`  -- ${chalk.cyan(`Parsed ${file.path} and inserted ${count} boundaries`)}`)
-        cb()
-      })
-
-    srcStream.resume()
-  })
+  const { ftp, options } = context
+  const srcStream = request.get(join(options.http, file.path)).buffer(false)
+  let count = 0
+  toJSON(srcStream)
+    .pipe(JSONStream.parse('features.*'))
+    .pipe(map.obj((feat, done) => {
+      ++count
+      context.onBoundary(file.type, feat, done)
+    }))
+    .once('error', (err) => cb(err))
+    .once('finish', () => {
+      debug(`  -- ${chalk.cyan(`Parsed ${file.path} and inserted ${count} boundaries`)}`)
+      cb()
+    })
 }
 
 function fetchObjectFiles({ ftp, options }, object, cb) {
