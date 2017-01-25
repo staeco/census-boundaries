@@ -31,7 +31,7 @@ export default (overrides, { onBoundary, onFinish }) => {
       onBoundary
     }
 
-    async.forEachSeries(options.objects, async.ensureAsync(processObject.bind(null, context)), onFinish)
+    async.forEach(options.objects, async.ensureAsync(processObject.bind(null, context)), onFinish)
   })
 }
 
@@ -40,7 +40,7 @@ function processObject(context, object, cb) {
   fetchObjectFiles(context, object, (err, filePaths) => {
     if (err) return cb(err)
     debug(chalk.bold(`Processing ${filePaths.length} boundary ${plural('file', filePaths.length)} for ${object}`))
-    async.forEachSeries(filePaths, async.ensureAsync(processFilePath.bind(null, context)), cb)
+    async.forEach(filePaths, async.ensureAsync(processFilePath.bind(null, context)), cb)
   })
 }
 
