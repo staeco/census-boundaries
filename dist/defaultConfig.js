@@ -9,7 +9,7 @@ exports.default = {
     port: 21
   },
   http: 'https://www2.census.gov',
-  base: '/geo/tiger/TIGER2016/',
+  base: '/geo/tiger/TIGER2017/',
   objects: ['STATE', 'COUNTY', 'PLACE', 'ZCTA5']
 };
 module.exports = exports['default'];
