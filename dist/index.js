@@ -48,6 +48,10 @@ var _once = require('once');
 
 var _once2 = _interopRequireDefault(_once);
 
+var _pump = require('pump');
+
+var _pump2 = _interopRequireDefault(_pump);
+
 var _defaultConfig = require('./defaultConfig');
 
 var _defaultConfig2 = _interopRequireDefault(_defaultConfig);
@@ -107,12 +111,11 @@ function processFilePath(context, file, cb) {
 
   var srcStream = _superagent2.default.get((0, _urlJoin2.default)(options.http, file.path)).buffer(false);
   var count = 0;
-  (0, _shp2json2.default)(srcStream).pipe(_JSONStream2.default.parse('features.*')).pipe(_through2Asyncmap2.default.obj(function (feat, done) {
+  (0, _pump2.default)((0, _shp2json2.default)(srcStream), _JSONStream2.default.parse('features.*'), _through2Asyncmap2.default.obj(function (feat, done) {
     ++count;
     context.onBoundary(file.type, feat, done);
-  })).once('error', function (err) {
-    return cb(err);
-  }).once('finish', function () {
+  }), function (err) {
+    if (err) return cb(err);
     debug('  -- ' + _chalk2.default.cyan('Parsed ' + file.path + ' and inserted ' + count + ' boundaries'));
     cb();
   });

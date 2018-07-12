@@ -9,6 +9,7 @@ import map from 'through2-asyncmap'
 import plural from 'plural'
 import clone from 'lodash.clone'
 import once from 'once'
+import pump from 'pump'
 import config from './defaultConfig'
 import getFTP from './getFTP'
 import _debug from 'debug'
@@ -51,17 +52,19 @@ function processFilePath(context, file, cb) {
   const { ftp, options } = context
   const srcStream = request.get(join(options.http, file.path)).buffer(false)
   let count = 0
-  toJSON(srcStream)
-    .pipe(JSONStream.parse('features.*'))
-    .pipe(map.obj((feat, done) => {
+  pump(
+    toJSON(srcStream),
+    JSONStream.parse('features.*'),
+    map.obj((feat, done) => {
       ++count
       context.onBoundary(file.type, feat, done)
-    }))
-    .once('error', (err) => cb(err))
-    .once('finish', () => {
+    }),
+    (err) => {
+      if (err) return cb(err)
       debug(`  -- ${chalk.cyan(`Parsed ${file.path} and inserted ${count} boundaries`)}`)
       cb()
-    })
+    }
+  )
 }
 
 function fetchObjectFiles({ ftp, options }, object, cb) {
