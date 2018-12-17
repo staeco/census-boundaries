@@ -13,14 +13,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contra/census-boundaries.git"
+    "url": "git+https://github.com/staeco/census-boundaries.git"
   },
   "author": "Contra <yo@contra.io> (http://contra.io)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/contra/census-boundaries/issues"
+    "url": "https://github.com/staeco/census-boundaries/issues"
   },
-  "homepage": "https://github.com/contra/census-boundaries#readme",
+  "homepage": "https://github.com/staeco/census-boundaries#readme",
   "files": [
     "src",
     "dist",
